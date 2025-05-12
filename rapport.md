@@ -21,8 +21,10 @@ Le chiffrement homomorphique est une forme de cryptographie qui permet d’effec
 L'avantage est qu’un serveur (ou un tiers) peut manipuler les données sans jamais voir leur contenu, ce qui est crucial pour la confidentialité. Il y a de nombreuses applications, notamment dans le cloud, le médical, la finance ou l'intelligence artificielle, et dans notre cas la reconnaissance d'image. Concrètement, le résultat d'une opération entre deux membres cryptés doivent donner un résultat qui, une fois décrypté, donne le résultat qu'aurait eu l'opération sur les deux membres avant l'opération de cryptage. 
 
 
-D'une manière plus formelle, considérons deux messages clairs m_1 et m_2 et $\star$ une opération simple telle que l'addition ou la multiplication. Un schéma de chiffrement E est dit homomorphe si, pour ces deux messages m_1​ et m_2​, et l'opération $\star$, on a :
-E(m_1) $\star$ E(m_2)=E(m_1⋆m_2)
+D'une manière plus formelle, considérons deux messages clairs $m_{1}$ et $m_{2}$ et $\star$ une opération simple telle que l'addition ou la multiplication. Un schéma de chiffrement E est dit homomorphe si, pour ces deux messages m_1 et m_2, et l'opération $\star$, on a :
+
+$$E(m_1) \star E(m_2)=E(m_1 \circ m_2)$$
+
 Soit l'opération entre le crypté de m_1 et le crypté de m_2 donne un résultat qui correspond au crypté d'une opération entre m_1 et m_2. 
 
 
