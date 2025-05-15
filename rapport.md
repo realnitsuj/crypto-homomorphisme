@@ -15,9 +15,9 @@ header-includes:
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
   - \usepackage[most]{tcolorbox}
   - \usepackage{tocloft}
-  - \setlength{\cftbeforesecskip}{12pt}
-  - \setlength{\cftbeforesubsecskip}{8pt}
-  - \setlength{\cftbeforesubsubsecskip}{5pt} 
+  - \setlength{\cftbeforesecskip}{10pt}
+  - \setlength{\cftbeforesubsecskip}{5pt}
+  - \setlength{\cftbeforesubsubsecskip}{3pt} 
   - \usepackage{titlesec}
   - \titleformat{\paragraph}[block]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 ---
@@ -55,9 +55,7 @@ Pour un tiers qui effectue le calcul, aucune information n'a fuitée : néanmoin
 
 \vspace{10.0px}
 
-Nous allons dans la suite nous pencher plus précisément sur le fonctionnement du chiffrement homomorphe et les étapes clés qu'il implique d'un point de vue général.
-
-Pour que le chiffrement homomorphe fonctionne, plusieurs fonctions clés doivent être utilisées. Ces fonctions permettent respectivement de générer des clés, de chiffrer des données, de réaliser des calculs sur ces données, et de les déchiffrer une fois les opérations terminées.
+Nous allons dans la suite nous pencher plus précisément sur le fonctionnement du chiffrement homomorphe et les étapes clés qu'il implique d'un point de vue général. En effet, pour que le chiffrement homomorphe fonctionne, plusieurs fonctions clés doivent être utilisées. Ces fonctions permettent respectivement de générer des clés, de chiffrer des données, de réaliser des calculs sur ces données, et de les déchiffrer une fois les opérations terminées.
 
 \vspace{20.0px}
 
@@ -234,7 +232,7 @@ Il est bon de noter que nous ne désignons que des entiers dans le chiffrement h
 
 Pour illustrer le propos sur ces deux catégories de chiffrements homomorphes, nous allons prendre un exemple de chiffrement partiel et de chiffrement complet et montrer leur fonctionnement, en cryptant ensemble deux messages et en effectuant des opérations sur eux. 
 
-Le chiffrement partiel que nous allons étudier en exemple est le chiffrement Pailler. Le chiffrement complet sera le chiffrement BGV (Brakerski-Gentry-Vaikuntanathan). 
+Le chiffrement partiel que nous allons étudier en exemple est le chiffrement Paillier. Le chiffrement complet sera le chiffrement BGV (Brakerski-Gentry-Vaikuntanathan). 
 
 \vspace{10.0px}
 
@@ -252,7 +250,7 @@ Voici son fonctionnement :
 
 \vspace{10.0px}
 
-Comme les autres chiffrement homomorphes, Pailler repose sur un chiffrement à clé publique/clé privée. La clé publique permet de chiffrer les données, et la clé privée est utilisée pour les déchiffrer.
+Comme les autres chiffrement homomorphes, Paillier repose sur un chiffrement à clé publique/clé privée. La clé publique permet de chiffrer les données, et la clé privée est utilisée pour les déchiffrer.
 Nous allons aborder étape par étape de façon détaillée les méthodes sur lesquelles reposent ce chiffrement.
 
 \vspace{10.0px}
@@ -459,9 +457,9 @@ Et on choisit :
 
 - Une clé publique $pk=(a(x),b(x))$ constituée de $a(x)\in R_{q}$ (aléatoire) et :
 
-$$b(x) = -a(x) \times (x) + e(x) mod(q)$$
+$$b(x) = -a(x) \times s(x) + e(x) mod(q)$$
 
-  où $e(x)$ est un petit bruit (petit $\Leftrightarrow |e(x) \times r(x)| \leq \delta$).
+  où $e(x)$ est un petit bruit (petit $\Leftrightarrow |e(x) \times r(x)| \leq \Delta$).
   
 \vspace{10.0px}
 
@@ -475,7 +473,7 @@ La clé publique est donc : $pk=(a(x),b(x))$, et la clé secrète est $s(x)$.
 
 Pour chiffrer un message $m(x) \in R_{q}$ (avec petits coefficients) :
 
-- On commence par encoder $m$ avec un facteur d’échelle $\delta = \lfloor \frac{q}{t} \rfloor$ tel qu'on ait $m'(x)=m(x) \times \delta$. L’objectif est que $m' \gg e \times r$, pour assurer que le bruit ne perturbe pas le message lors du déchiffrement.
+- On commence par encoder $m$ avec un facteur d’échelle $\Delta = \lfloor \frac{q}{t} \rfloor$ tel qu'on ait $m'(x)=m(x) \times \Delta$. L’objectif est que $m' \gg e \times r$, pour assurer que le bruit ne perturbe pas le message lors du déchiffrement.
 
 - On prend un petit vecteur aléatoire $r(x) \in R_{q}$
 
@@ -538,7 +536,7 @@ Si $c(x)=(c0,c1)$, alors le message clair est obtenu par :
 
 $$m'(x)=c_{0}(x)+c_{1}(x) \times s(x) ~ mod(q)$$
 
-$$m(x) = \lfloor \frac{m'(x)}{\delta} \rfloor$$
+$$m(x) = \lfloor \frac{m'(x)}{\Delta} \rfloor$$
 
 Sous réserve que le bruit ne soit pas trop grand, ce message est exact.
 
@@ -594,7 +592,7 @@ On calcule :
 
 \vspace{10.0px}
 
-Encodage avec $\delta=1024$ :
+Encodage avec $\Delta=1024$ :
 
 $$m_{1} = 4 \Rightarrow m_{1}'=4 \times 1024 = 4096$$
 
@@ -672,7 +670,7 @@ On obtient :
 
 \begin{tcolorbox}[colback=white!5!white, colframe=black!75!black]
 \[
-m=\lfloor m' \times \delta ^{2} \rfloor = \lfloor 8897/1024^{2}\rfloor=0.
+m=\lfloor m' \times \Delta ^{2} \rfloor = \lfloor 8897/1024^{2}\rfloor=0.
 \]
 \end{tcolorbox}
 
@@ -682,7 +680,7 @@ m=\lfloor m' \times \delta ^{2} \rfloor = \lfloor 8897/1024^{2}\rfloor=0.
 
 \vspace{10.0px}
 
-Toute l'information a été perdue dans la réduction modulo q car le produit chiffré a dépassé q. Il faut $$m_{1} \times m_{2} \times \delta ^{2} \ll q$$ 
+Toute l'information a été perdue dans la réduction modulo q car le produit chiffré a dépassé q. Il faut $$m_{1} \times m_{2} \times \Delta ^{2} \ll q$$ 
 
 Trouver un q minimal, c'est le [**noise budget**](https://hal-lirmm.ccsd.cnrs.fr/lirmm-04497864v1/file/main.pdf) (ici on n'aborde pas ça).
 
@@ -755,7 +753,7 @@ On utilise :
 
 \begin{tcolorbox}[colback=white!5!white, colframe=black!75!black]
 \[
-m=\lfloor m' \times \delta ^{2} \rfloor= \lfloor 20980737/1024^{2} \rfloor = 20
+m=\lfloor m' \times \Delta ^{2} \rfloor= \lfloor 20980737/1024^{2} \rfloor = 20
 \]
 \end{tcolorbox}
 
@@ -896,22 +894,38 @@ Ce modèle pourrait s’étendre à d'autres domaines sensibles comme la santé 
 \vspace{10.0px}
 
 Principes généraux :
+
 <https://youtu.be/4GFptdPqqFI?si=G74VYxiTuMGQMWKV>
+
+<https://fr.wikipedia.org/wiki/Chiffrement_homomorphe>
+
+<https://homomorphicencryption.org/introduction/>
+
+<https://www.statcan.gc.ca/fr/science-donnees/reseau/chiffrement-homomorphe>
+
+<https://www.iacr.org/news/item/22394>
 
 \vspace{10.0px}
 
 
 Principes mathématiques :
+
 <https://www.youtube.com/@CipheredDuck>
+
+<https://www.jeremykun.com/2024/05/04/fhe-overview/>
+
+<https://www.daniellowengrub.com/blog/2024/01/03/fully-homomorphic-encryption>
 
 \vspace{10.0px}
 
 CKKS :
+
 <https://www.youtube.com/watch?v=iQlgeL64vfo&t=745s>
 
 \vspace{10.0px}
 
 BFV : 
+
 <https://crypto.stackexchange.com/questions/98204/what-is-the-difference-between-the-fully-homomorphic-bfv-and-bgv-schemes>
 
 \vspace{10.0px}
@@ -921,13 +935,16 @@ BFV :
 \vspace{10.0px}
 
 Écosystème Apple :
+
 <https://machinelearning.apple.com/research/homomorphic-encryption>
 
 
 \vspace{10.0px}
 
 Autre :
+
 <https://huggingface.co/spaces/zama-fhe/encrypted_image_filtering>
+
 <https://github.com/zama-ai/concrete-ml?tab=readme-ov-file#demos>
 
 \vspace{10.0px}
