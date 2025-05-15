@@ -89,7 +89,7 @@ Voici ces étapes :
    
    On ne rentrera pas dans ces détails dans cet exposé. Néanmoins, si on veut autoriser des additions dans le monde chiffré, comme dans le chiffrement de Paillier que nous verrons tout à l'heure, on choisit une structure qui rend cela possible — ici, un groupe de $\displaystyle \mathbb {Z}$ mod($n^{2}$).  
    
-   Pour [CKKS](https://en.wikipedia.org/wiki/HEAAN) (le chiffrement utilisé pour le machine learning), c’est encore plus complexe, car on doit pouvoir faire des multiplications, des divisions approximées, et gérer la précision. Les clés sont donc construites autour de polynômes, avec des paramètres très spécifiques (représentation des vecteurs de nombres réels ou complexes, comme des [polynômes dans un anneau modulo un cyclotomique](https://yongsoosong.github.io/files/slides/intro_to_CKKS.pdf)). 
+   Pour [CKKS](https://en.wikipedia.org/wiki/HEAAN) ou BGV/BFV (des chiffrements utilisés pour le machine learning que nous aborderons dans la suite), c’est encore plus complexe, car on doit pouvoir faire des multiplications, des divisions approximées, et gérer la précision. Les clés sont donc construites autour de polynômes, avec des paramètres très spécifiques (représentation des vecteurs de nombres réels ou complexes, comme des [polynômes dans un anneau modulo un cyclotomique](https://yongsoosong.github.io/files/slides/intro_to_CKKS.pdf)). 
 
    
    \vspace{15.0px}
@@ -163,7 +163,7 @@ Une fonction de chiffrement peut être homomorphe sur une certaine opération, m
 \begin{itemize}
   \item \textbf{Le bruit introduit dans le chiffrement}
 
-  Dans la plupart des schémas de chiffrement homomorphes modernes (comme BGV que nous allons voir ou CKKS), chaque opération (addition ou multiplication) augmente le bruit dans le chiffré.
+  Dans la plupart des schémas de chiffrement homomorphes modernes (comme BGV que nous allons voir, BFV et CKKS), chaque opération (addition ou multiplication) augmente le bruit dans le chiffré.
 
   Ce bruit est une erreur introduite pour assurer la sécurité du chiffrement : tant que le bruit reste en dessous d’un certain seuil, le déchiffrement est correct ; mais si le bruit devient trop grand (après de nombreuses opérations), le déchiffrement peut échouer, même si la fonction reste homomorphe au sens formel.
     
@@ -382,7 +382,7 @@ $$E(3) + E(5) = E(3 + 5) = E(8)$$
 
 Or, avec notre opération $\star$ :
 
-$$E(3) \star E(5) = E(3) \times E(5) mod(n^{2}) = 2390 \times 1366 mod(77^{2}) = 3790 = c$$
+$$E(3) \star E(5) = E(3) \times E(5) ~ mod(n^{2}) = 2390 \times 1366 ~ mod(77^{2}) = 3790 = c$$
 
 Donc $E(8) = c = 3790$.
 
@@ -394,13 +394,13 @@ Donc $E(8) = c = 3790$.
 
 Calculs intermédiaires : 
 
-- c^$\lambda$ mod(n^2) = 3790^30 mod(77²) = 694
+- $c^{\lambda}$ mod($n^{2}$) = $3790^{30}$ mod($77^2$) = 694
 
-- L(c^$\lambda$) = 77694-1 ​= 9
+- L($c^{\lambda}$) = 77694-1 ​= 9
 
-- g^$\lambda$ mod(n^2) = 2311
+- $g^{\lambda}$ mod($n^{2}$) = 2311
 
-- L(g^$\lambda$) = 772311-1 ​= 30
+- L($g^{\lambda}$) = 772311-1 ​= 30
 
 - Inverse modulaire de 30 mod(77) = 18
 
@@ -481,11 +481,11 @@ Pour chiffrer un message $m(x) \in R_{q}$ (avec petits coefficients) :
 
 - On calcule :
 
-  $$c_{0}(x) = b(x) \times r(x) + m'(x) mod(q)$$
+  $$c_{0}(x) = b(x) \times r(x) + m'(x) ~ mod(q)$$
 
   et :
 
-  $$c_{1}(x) = a(x) \times r(x) mod(q)$$
+  $$c_{1}(x) = a(x) \times r(x) ~ mod(q)$$
 
 \vspace{10.0px}
   
@@ -535,7 +535,7 @@ $$c^{(1)} \times c^{(2)} = (c_{0}^{(1)} \times c_{0}^{(2)},  c_{0}^{(1)} \times 
 
 Si $c(x)=(c0,c1)$, alors le message clair est obtenu par :
 
-$$m'(x)=c_{0}(x)+c_{1}(x) \times s(x) mod(q)$$
+$$m'(x)=c_{0}(x)+c_{1}(x) \times s(x) ~ mod(q)$$
 
 $$m(x) = \lfloor \frac{m'(x)}{\delta} \rfloor$$
 
@@ -574,11 +574,11 @@ Nous n'aborderons pas cela ici.
 
 On calcule :
 
-  $b=-a*s+e=-1234*1+1=-1233 mod(65537)=64304$
+  $b=-a*s+e=-1234*1+1=-1233 ~ mod(65537)=64304$
 
 \vspace{10.0px}
 
-- Clé publique : $pk=(a(x)=12345,b(x)=20424)$
+- Clé publique : $pk=(a(x)=12345, ~ b(x)=20424)$
 - Clé secrète : $s(x)=1$
 
 \vspace{10.0px}
@@ -601,13 +601,13 @@ Rappel : $c_{0} = b \times r + m'$, $c_{1} =a \times r$
 
 Pour $m_{1}$ :
 
-$$c_{0}^{(1)} = 64304+4096 = 68400 mod(65537) = 2863$$
+$$c_{0}^{(1)} = 64304+4096 = 68400 ~ mod(65537) = 2863$$
 
 $$c_{1}^{(1)} = 1234$$
 
 Pour $m_{2}$ :
 
-$$c_{0}^{(2)} = 64304+5120 = 69424 mod(65537) = 3887$$
+$$c_{0}^{(2)} = 64304+5120 = 69424 ~ mod(65537) = 3887$$
 
 $$c_{1}^{(2)}=1234$$
 
@@ -620,7 +620,7 @@ $$(c_{0}^{(1)}+c_{0}^{(2)}, c_{1}^{(1)}+c_{1}^{(2)})=(2863+3887, 1234+1234)=(675
 
 Déchiffrement :
 
-$$m'^{+}=c_{0}+c_{1} \times s = 6750+2468 = 9218 mod(65537)$$
+$$m'^{+}=c_{0}+c_{1} \times s = 6750+2468 = 9218 ~ mod(65537)$$
 
 $$m=\lfloor 9218/1024 \rfloor= \lfloor 9.002 \rfloor=9$$
 
@@ -634,11 +634,11 @@ Produit brut (avant relinéarisation) :
 
   - Formule du produit:
       
-    $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 mod(65537) = 52728$$
+    $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 ~ mod(65537) = 52728$$
 
-    $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)} +c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 mod(65537) = 6301$$
+    $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)} +c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 ~ mod(65537) = 6301$$
 
-    $$c_{2}^{\times} = c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 mod(65537) = 15405$$
+    $$c_{2}^{\times} = c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 ~ mod(65537) = 15405$$
 
   - Triplet :
 
@@ -648,7 +648,7 @@ Produit brut (avant relinéarisation) :
 
   On simule que $c_{2} \times s$ est injecté dans $c_{0}$, on a :
 
-  $$c_{0}'=c_{0}+c_{2} \times s = 52728+15405 = 68133 mod(65537) = 2596$$
+  $$c_{0}'=c_{0}+c_{2} \times s = 52728+15405 = 68133 ~ mod(65537) = 2596$$
 
   $$c_{1}'= c_{1} = 6301$$
 
@@ -688,13 +688,13 @@ Or ici, $m_{1}' \times m_{2}'=4096 \times 5120=20971520$ plus grand que 65537 do
 
 En refaisant avec $q = 2^{36} = 68719476736$ :
 
-$$b = -a \times s+e = -1234 \times 1+1 = -1233 mod(68719476736) = 68719475503$$
+$$b = -a \times s+e = -1234 \times 1+1 = -1233 ~ mod(68719476736) = 68719475503$$
 
 \vspace{10.0px}
 On reprend des paramètres : 
 
 
-- Clé publique : $pk=(a(x)=12345,b(x)=68719475503)$
+- Clé publique : $pk=(a(x)=12345, ~ b(x)=68719475503)$
 - Clé secrète : $s(x)=1$
 
 > Rappel : $c_{0}=b \times r+m'$, $c_{1}=a \times r$
@@ -703,13 +703,13 @@ On reprend des paramètres :
 
 Pour $m_{1}$ :
 
-$$c_{0}^{(1)} = 68719475503+4096 = 68719479599 mod(68719476736) = 2863$$
+$$c_{0}^{(1)} = 68719475503+4096 = 68719479599 ~ mod(68719476736) = 2863$$
 
 $$c_{1}^{(1)} = 1234$$
 
 Pour $m_{2}$ :
 
-$$c_{0}^{(2)} = 68719475503+5120 = 68719480623 mod(68719476736) = 3887$$
+$$c_{0}^{(2)} = 68719475503+5120 = 68719480623 ~ mod(68719476736) = 3887$$
 
 $$c_{1}^{(2)}=1234$$
 
@@ -721,27 +721,27 @@ Produit brut (avant relinéarisation) :
 
 - Formule du produit:
 
-  $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 mod(68719476736) = 11128481$$
+  $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 ~ mod(68719476736) = 11128481$$
 
-  $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)}+c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 mod(68719476736) = 8329500$$
+  $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)}+c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 ~ mod(68719476736) = 8329500$$
 
-  $$c_{2}^{\times}= c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 mod(68719476736) = 1522756$$
+  $$c_{2}^{\times}= c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 ~ mod(68719476736) = 1522756$$
 
 - Triplet :
 
-  $$(c_{0},c_{1},c_{2})=(11128481, 8329500, 1522756)$$
+  $$(c_{0},c_{1},c_{2})=(11128481, ~ 8329500, ~ 1522756)$$
 
 Relinéarisation (simplifiée ici) :
 
 On simule que $c_2 \times s$ est injecté dans $c_{0}$, on a :
 
-$$c_{0}'=c_{0}+c_{2} \times s = 11128481+1522756 = 12651237 mod(68719476736) = 12651237$$
+$$c_{0}'=c_{0}+c_{2} \times s = 11128481+1522756 = 12651237 ~ mod(68719476736) = 12651237$$
 
 $$c_{1}'= c_{1} = 8329500$$
 
 Finalement :
 
-$$m'^{\times} = c_{0}'+c_{1}' \times s = 12651237+8329500 = 20980737 mod(68719476736) = 20980737$$
+$$m'^{\times} = c_{0}'+c_{1}' \times s = 12651237+8329500 = 20980737 ~ mod(68719476736) = 20980737$$
 
 On utilise : 
 \vspace{10.0px}
