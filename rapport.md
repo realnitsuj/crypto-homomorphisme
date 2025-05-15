@@ -414,3 +414,5 @@ m'^× = c_0'+c_1'*s = 12651237+8329500 = 20980737 mod(68719476736) = 20980737
 On utilise : $m={pipe_bas}m'× \delta ^{2} [pipe]={pipe_bas}20980737/1024^{2}[pipe] = 20$
 
 Ça fonctionne !
+
+
