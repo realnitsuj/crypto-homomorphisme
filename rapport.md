@@ -15,8 +15,8 @@ header-includes:
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
   - \usepackage[most]{tcolorbox}
   - \usepackage{tocloft}
-  - \setlength{\cftbeforesecskip}{20pt}
-  - \setlength{\cftbeforesubsecskip}{15pt}
+  - \setlength{\cftbeforesecskip}{12pt}
+  - \setlength{\cftbeforesubsecskip}{8pt}
   - \setlength{\cftbeforesubsubsecskip}{5pt} 
   - \usepackage{titlesec}
   - \titleformat{\paragraph}[block]{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
@@ -337,15 +337,15 @@ Cela permet d'extraire le message $m = m_{1} + m_{2}$ en clair à partir de la v
 
 \vspace{10.0px}
 
-## Exemple concret avec Paillier
+### Exemple concret avec Paillier
 
 \vspace{10.0px}
 
-Prenons maintenant un exemple simple pour illustrer le processus de chiffrement et d'addition avec Paillier.
+Prenons maintenant un exemple simple pour illustrer le processus de chiffrement et d'addition avec Paillier. Un code `Python` est donnée en annexe et reprend les étapes pour effectuer le calcul de façon numérique, de la même manière que cette section dans laquelle les calculs sont effectués "à la main".
 
 \vspace{10.0px}
 
-### Génération des clés
+#### Génération des clés
 \vspace{10.0px}
 
 - On choisit $p=7$ et $q=11$ (exemple simple).
@@ -358,7 +358,7 @@ Prenons maintenant un exemple simple pour illustrer le processus de chiffrement 
 
 \vspace{10.0px}
 
-### Chiffrement du message
+#### Chiffrement du message
 
 \vspace{10.0px}
 
@@ -372,7 +372,7 @@ Prenons maintenant un exemple simple pour illustrer le processus de chiffrement 
 
 \vspace{10.0px}
 
-### Addition des messages chiffrés
+#### Addition des messages chiffrés
 
 \vspace{10.0px}
 
@@ -388,7 +388,7 @@ Donc $E(8) = c = 3790$.
 
 \vspace{10.0px}
 
-### Déchiffrement du message:
+#### Déchiffrement du message:
 
 \vspace{10.0px}
 
@@ -492,8 +492,9 @@ Pour chiffrer un message $m(x) \in R_{q}$ (avec petits coefficients) :
   Le chiffré est donc :
 
   $$c(x)=(c_{0}(x),c_{1}(x))$$
+  
+\vspace{10.0px}
 
-\newpage
   
 ### Calculs sur les messages chiffrés
 
@@ -550,11 +551,16 @@ Le schéma BGV inclut donc des techniques comme le \textit{modulus switching} po
 Nous n'aborderons pas cela ici.
 \end{tcolorbox}
 
-\newpage
+\vspace{10.0px}
 
 ### Application du chiffrement BGV
 
 \vspace{10.0px}
+
+Un code `Python` est donnée en annexe et reprend les étapes pour effectuer le calcul de façon numérique, de la même manière que cette section dans laquelle les calculs sont effectués "à la main".
+
+\vspace{10.0px}
+
 
 | Paramètre | Valeur         | Justification                                  |
 | --------- | -------------- | ---------------------------------------------- |
@@ -755,6 +761,171 @@ m=\lfloor m' \times \delta ^{2} \rfloor= \lfloor 20980737/1024^{2} \rfloor = 20
 
 \vspace{10.0px}
 
-**Ça fonctionne !**
+On obtient maintenant bien le résultat escompté.
 
-sources : <https://www.youtube.com/@CipheredDuck>
+\vspace{20.0px}
+
+# Reconnaissance d’image à partir de données chiffrées
+
+\vspace{20.0px}
+
+Dans cette section, nous allons prendre ce que nous avons précedemment défini comme base pour aborder le cas précis de la reconnaissance d'images à partir de données chiffrées homomorphiquement, en nous concentrant sur le cas pratique d'Apple.
+
+Dans [cet article](https://hebdo.framapad.org/p/5jbeliy9oy-aeif?lang=fr), Apple explique qu'ils ont implémenté l'algorithme BFV^[Le Brakerski-Fan-Vercauteren est un version plus complexe que le BGV, bien qu'ils soient liés. Ce dernier travaille sur les bits de poids faibles, tandis que le premier est sur les bits de poids forts : <https://eprint.iacr.org/2021/204.pdf>] (Brakerski-Fan-Vercauteren) pour permettre la recherche de lieux et visages par l'utilisateur à partir de sa galerie, en utilsant du machine learning sur les données chiffrées. Apple utilise BFV pour répondre à ces exigences car il reprend une structure similaire à celle de BGV mais plus complexe et complète, la rendant plus résiliente au bruit. Elle est, comme BGV, homomorphiquement complète en permettant multiplications et additions. Nous avons déjà traité un cas simple de BGV dans ce rapport, donc nous ne développerons pas au sujet de BFV pour garder de la simplicité (et un nombre de pages relativement court). Par ailleurs, les étapes considérées pour BFV reprennent les mêmes étapes que celles de BGV (les étapes de noise management et de bootstrapping sont légerement modifiées, mais nous n'en avons pas traité en détail dans notre schéma simplifié de BGV donc nous ne développerons pas d'avantage non plus). 
+
+
+\vspace{10.0px}
+
+Par ailleurs, il est nécessaire d'effectuer plusieurs étapes avant de pouvoir chiffrer les images et effectuer des calculs pour les opérations de machine learning. Les opérations mises en oeuvres dans le domaine chiffré sont en effet bien plus lourdes que dans le domaine classique (cf section précedente où un simple $4 \times 5$ peut s'avérere être une opération délicate). Avant d'aborder ces étapes, il est nécessaire de définir un certain nombre de termes utiles à la suite. 
+
+\vspace{10.0px}
+
+## Définitions
+
+\vspace{10.0px}
+
+- **Vecteur d'embedding** : 
+  Un vecteur d'embedding est une représentation mathématique dense d’un objet complexe, comme une image ou un texte, sous forme d’un vecteur de nombres réels.
+  Dans le cadre de la reconnaissance d’image, un embedding encode les caractéristiques visuelles essentielles d’une image (formes, couleurs, textures) dans un espace vectoriel de dimension réduite (souvent entre 128 et 512 dimensions). Deux images similaires produiront des vecteurs proches selon une métrique définie, comme la distance euclidienne ou le produit scalaire. Ces vecteurs sont utilisés pour comparer, classer ou rechercher des images efficacement.
+
+\vspace{10.0px}
+
+- **Quantification (Quantization)** :
+  Procédé qui consiste à convertir des valeurs réelles en entiers pour permettre leur chiffrement. Cela permet d’utiliser un chiffrement comme BFV qui ne supporte que les entiers.
+  Exemple : convertir $0.812 \rightarrow 81$ si on travaille avec 2 chiffres après la virgule.
+
+\vspace{10.0px}
+
+- **Batching (encodage par paquets)** :
+  Technique d’optimisation qui permet de chiffrer plusieurs valeurs indépendantes dans un seul chiffré grâce à des structures algébriques (comme les anneaux cyclotomiques).
+  Cela permet par exemple de traiter tout un vecteur d'embedding en une seule opération homomorphe, en exploitant le parallélisme structurel du schéma ([SIMD](https://fr.wikipedia.org/wiki/Single_instruction_multiple_data) : Single Instruction, Multiple Data).
+
+
+\vspace{10.0px}
+
+## Comment fonctionne la reconnaissance d'image ?
+
+\vspace{10.0px}
+
+Dans un système classique, la reconnaissance d’image repose sur l’extraction d’un **vecteur d’embedding** à partir d’une image. En effet, il n'est pas envisageable d'effectuer trop de calculs, nottament dans le domaine chiffré : on cherche alors à diminuer coûte que coûte le nombre de calculs à effectuer. Afin de pouvoir faire l'embedding, on transpose les données flottantes en entiers en effectuant de la **quantification**. Sans cette étape, BFV ne convient pas et il faut envisager une méthode de chiffrement homomorphique qui gère les flottants (CKKS par exemple). On procède ensuite à l'encodage, en effectuant du **batching** pour ne pas encoder outre mesure. Ce vecteur est ensuite comparé à d'autres vecteurs contenus dans une base de données d’embeddings, représentant d'autres images, grâce à du machine learning. Cette comparaison permet d’identifier les images visuellement proches.
+
+\vspace{10.0px}
+
+ICI
+
+\vspace{20.0px}
+
+## Cas pratique : la recherche visuelle améliorée chez Apple
+
+\vspace{10.0px}
+
+Apple a récemment intégré le chiffrement homomorphe dans son écosystème, notamment pour les fonctionnalités de recherche d'images similaires sur appareil. 
+
+L’objectif est, comme nous l'avons décrit précédemment, de permettre aux utilisateurs de retrouver des images visuellement proches sans jamais exposer les données personnelles (ni images, ni vecteurs d'embedding, ni requêtes). Tout se fait sous forme chiffrée, grâce à l’utilisation du schéma BFV.
+
+Le principe est le même que pour d'autres gestionnaires de photo (google photo nottament). La galerie dispose d'une barre de recherche dans laquelle il est possible de chercher des photos par mot clé (lieu, personne, etc). Le téléphone n'est pas en mesure d'effectuer les calculs d'analyse d'image nécessaires, mais le serveur ne doit pas non plus pouvoir avoir accès aux photos en clair. C'est donc le chiffrement homomorphe qui est utilisé pour répondre à ces exigences, selon le fonctionnement global suivant.
+
+
+### Fonctionnement global
+
+\begin{itemize}
+\item En local, l’iPhone extrait les vecteurs d’embedding de chaque photo. Ces vecteurs sont chiffrés via BFV et stockés dans la base chiffrée personnelle de l’utilisateur, sur les serveurs d’Apple.
+\item Lors d’une recherche, un vecteur d’embedding est extrait localement à partir de la requête (image à rechercher).
+\item Ce vecteur est à son tour chiffré avec la même clé (ou une clé dérivée).
+\item Le vecteur chiffré est envoyé au serveur, qui effectue les comparaisons homomorphes (produits scalaires ou distances euclidiennes approximées) sur les embeddings chiffrés.
+\item Le résultat des comparaisons est renvoyé, toujours chiffré, à l’iPhone qui le déchiffre localement et affiche les images les plus similaires.
+\end{itemize}
+
+\vspace{10.0px}
+ICI
+\vspace{10.0px}
+
+### Pourquoi BFV ?
+
+\vspace{10.0px}
+
+Le choix de BFV (plutôt que BGV ou CKKS) est motivé par plusieurs raisons :
+
+* Il permet un chiffrement exact sur des entiers, ce qui est adapté pour manipuler des embeddings discrétisés.
+
+* Il prend en charge les additions et multiplications, nécessaires pour les calculs de produits scalaires.
+
+* Il est plus stable numériquement que CKKS, qui introduit des erreurs d’approximation.
+
+
+\vspace{10.0px}
+
+## Perspectives et limitations
+
+\vspace{10.0px}
+
+L'intégration du chiffrement homomorphe dans les systèmes de reconnaissance d'image constitue une avancée majeure vers une IA respectueuse de la vie privée en permettant de déléguer des calculs complexes à des serveurs distants, sans jamais exposer les données personnelles.
+\vspace{10.0px}
+Cependant, plusieurs défis subsistent :
+
+\begin{itemize}
+\item Le coût computationnel reste élevé, même si des progrès matériels (accélérateurs cryptographiques) et logiciels (optimisations algébriques) réduisent cet écart.
+\item Le bruit homomorphe limite la profondeur des circuits de calcul réalisables sans recours au bootstrapping.
+\item Le déploiement à large échelle nécessite une gestion complexe des clés, des formats d'encodage, et des mises à jour logicielles sécurisées.
+\end{itemize}
+
+\vspace{10.0px}
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=Conclusion]
+La recherche visuelle chiffrée, comme mise en œuvre par Apple avec le chiffrement BFV, montre qu’il est possible de concilier confidentialité et puissance algorithmique.
+Ce modèle pourrait s’étendre à d'autres domaines sensibles comme la santé (c'est déjà d'actualité), la biométrie ou la vidéosurveillance intelligente (c'est encore trop ambitieux, pour des raisons de puissance de calcul).
+\end{tcolorbox}
+
+
+\newpage
+
+
+# Bibliographie
+
+\vspace{10.0px}
+
+## Github du projet :
+<https://github.com/realnitsuj/crypto-homomorphisme>
+
+\vspace{10.0px}
+
+## Le chiffrement homomorphique :
+
+\vspace{10.0px}
+
+Principes généraux :
+<https://youtu.be/4GFptdPqqFI?si=G74VYxiTuMGQMWKV>
+
+\vspace{10.0px}
+
+
+Principes mathématiques :
+<https://www.youtube.com/@CipheredDuck>
+
+\vspace{10.0px}
+
+CKKS :
+<https://www.youtube.com/watch?v=iQlgeL64vfo&t=745s>
+
+\vspace{10.0px}
+
+BFV : 
+<https://crypto.stackexchange.com/questions/98204/what-is-the-difference-between-the-fully-homomorphic-bfv-and-bgv-schemes>
+
+\vspace{10.0px}
+
+## Reconnaissance d’image à partir de données chiffrées :
+
+\vspace{10.0px}
+
+Écosystème Apple :
+<https://machinelearning.apple.com/research/homomorphic-encryption>
+
+
+\vspace{10.0px}
+
+Autre :
+<https://huggingface.co/spaces/zama-fhe/encrypted_image_filtering>
+<https://github.com/zama-ai/concrete-ml?tab=readme-ov-file#demos>
+
+\vspace{10.0px}
