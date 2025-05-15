@@ -1,6 +1,6 @@
 ---
-title: Le chiffrement homomorphique appliqué au Machine Learning, et plus particulièrement à la reconnaissance d'image
-subtitle: Rapport
+title: Chiffrement homomorphique appliqué au Machine Learning
+subtitle: Protection de l'information
 author: 
     - Justin BOSSARD
     - Tom MAFILLE
@@ -11,25 +11,30 @@ header-includes:
  - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---
 
+\
 
 # Le chiffrement homomorphique
 
+\vspace{20.0px}
+
 ## Définition générale
+
+
+\vspace{10.0px}
 
 Le chiffrement homomorphique est une forme de cryptographie qui permet d’effectuer des opérations sur des données chiffrées, sans jamais avoir besoin de les déchiffrer.
     
 L'avantage est qu’un serveur (ou un tiers) peut manipuler les données sans jamais voir leur contenu, ce qui est crucial pour la confidentialité. Il y a de nombreuses applications, notamment dans le cloud, le médical, la finance ou l'intelligence artificielle, et dans notre cas la reconnaissance d'image. Concrètement, le résultat d'une opération entre deux membres cryptés doivent donner un résultat qui, une fois décrypté, donne le résultat qu'aurait eu l'opération sur les deux membres avant l'opération de cryptage. 
 
 
+### Définition formelle
+
 D'une manière plus formelle, considérons deux messages clairs $m_{1}$ et $m_{2}$ et $\star$ une opération simple telle que l'addition ou la multiplication. Un schéma de chiffrement E est dit homomorphe si, pour ces deux messages m_1 et m_2, et l'opération $\star$, on a :
 
 $$E(m_1) \star E(m_2)=E(m_1 \circ m_2)$$
 
-Soit l'opération entre le crypté de m_1 et le crypté de m_2 donne un résultat qui correspond au crypté d'une opération entre m_1 et m_2. 
-
-
-Pour représenter plus simplement, donnons un exemple :
-Soit 1 mon message m_1 et 2 mon message m_2. On ne va pas rentrer tout de suite en détail sur la fonction homomorphe E utilisée, mais on suppose qu'elle est choisie telle que l'opération ° et l'opération * soient l'addition pour un soucis de simplification. On note les cryptés respectifs de m_1 et m_2 selon cette fonction homomorphe e_1 et e_2 et tels que E(m_1) = e_1 et E(m_2) = e_2. Dans notre cas, e_1 = 1839283 et e_2 = 5789483. la somme de e_1 et e_2  fait 1839283+5789483=7628766 et E-1(7628766) = 3. Pour un tiers qui effectue le calcul, aucune information n'a fuitée : néanmoins, des opérations ont été réalisées sur les nombres. On peut donc déléguer le calcul sans crainte de fuites de données.
+Soit l'opération entre le crypté de $m_1$ et le crypté de $m_2$ donne un résultat qui correspond au crypté d'une opération entre $m_1$ et $m_2$. 
+Pour un tiers qui effectue le calcul, aucune information n'a fuitée : néanmoins, des opérations ont été réalisées sur les nombres. On peut donc déléguer le calcul sans crainte de fuites de données.
 
 
 Maintenant, nous allons nous pencher plus précisément sur le fonctionnement du chiffrement homomorphe et les étapes clés qu'il implique d'un point de vue général.
@@ -357,12 +362,12 @@ c_1'= c_1 = 6301
 
 m'^× = c_0'+c_1'*s = 2596+6301=8897 mod(65537) = 8897
 
-On utilise : m={pipe_bas}m'×$\delta$2[pipe]={pipe_bas}8897/1024^2[pipe]=0
+On utilise : $m={pipe_bas}m'× \delta ^{2}[pipe]={pipe_bas}8897/1024^{2}[pipe]=0$
 
 
 :( ça marche pas.... Pourquoi ?
 
-Toute l'info a été perdue dans la réduction modulo q car le produit chiffré a dépassé q. Il faut m_1​*m_2​*$\delta$^2<<q. 
+Toute l'info a été perdue dans la réduction modulo q car le produit chiffré a dépassé q. Il faut m_1​*m_2​* $\delta$ ^2 < < q. 
 
 Trouver un q minimal, c'est le noise budget (ici on n'aborde pas ça).
 
@@ -406,6 +411,6 @@ Déchiffrement final :
 
 m'^× = c_0'+c_1'*s = 12651237+8329500 = 20980737 mod(68719476736) = 20980737
 
-On utilise : m={pipe_bas}m'×$\delta$2[pipe]={pipe_bas}20980737/1024^2[pipe] = 20
+On utilise : $m={pipe_bas}m'× \delta ^{2} [pipe]={pipe_bas}20980737/1024^{2}[pipe] = 20$
 
 Ça fonctionne !
