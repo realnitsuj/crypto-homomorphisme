@@ -8,6 +8,7 @@ lang: fr-FR
 slideNumber: true
 controls: false
 theme: white
+revealjs-url: https://unpkg.com/reveal.js@^4
 ---
 
 # Le chiffrement homomorphique
@@ -18,7 +19,7 @@ Le chiffrement homomorphique est une forme de cryptographie qui permet d’effec
 
 ***
 
-Soit $m_{1}$ et $m_{2}$ deux messages clairs, $\star$ une opération simple et $E$ un schéma de chiffrement.  
+Soit $m_{1}$ et $m_{2}$ deux messages clairs, $\star$ et $\circ$ une opération simple et $E$ un schéma de chiffrement.  
 $E$ est dit homomorphe si on a :$$E(m_{1} \star m_{2}) = E(m_{1}) \circ E(m_{2})$$
 
 ## Comment ça marche ?
@@ -56,10 +57,10 @@ $E$ est dit homomorphe si on a :$$E(m_{1} \star m_{2}) = E(m_{1}) \circ E(m_{2})
 On distingue donc :
 
 Homomorphisme
-:   structurelle (préserve les opérations)
+:   structurel (préserve les opérations)
 
 Correction
-:   fonctionnelle (le résultat est bon)
+:   fonctionnel (le résultat est bon)
 
 Sécurité
 :   l'attaquant n'apprend rien
@@ -71,11 +72,11 @@ Sécurité
 
 Deux types de fonctions homomorphes :
 
-- Partielles (+ ou $\times$)
+- Partielles ($+$ ou $\times$)
 
   RSA (multiplication) ou Paillier (addition)
 
-- Complètes (+ et $\times$)
+- Complètes ($+$ et $\times$)
 
   Brakerski-Gentry-Vaikuntanathan (BGV)
 
@@ -87,14 +88,144 @@ Deux types de fonctions homomorphes :
 Cela est valide sur des entiers. Pour des flottants, les fonctions sont nécessairement homomorphiques complètes.
 ```
 
-
 ## Exemple d'une fonction homomorphe partielle : le chiffrement de Paillier
 
+Schéma homomorphe partiel
+:   permet uniquement l’addition sur des données chiffrées.
+
+Basé sur la difficulté du logarithme discret dans les groupes multiplicatifs.
+
+### Génération des clés
+
+::: incremental
+
+1. Choix de deux grands nombres premiers : $p$, $q$
+
+2. Calcul : $n = p \times q$
+
+3. Clé publique : $(n,g)$ avec $g \in Z_{n^{2}}$ et $g=n+1$ en général
+
+4. Clé privée : $\lambda = PPCM(p-1,q-1)$
+
+:::
 
 
-## Application du chiffrement de Paillier
+
+### Chiffrement d’un message
+
+::: incremental
+
+1. Message $m \in [0,n]$
+
+2. Choix d’un nombre aléatoire $r \in Z_{n}^{*}$
+
+3. Formule de chiffrement :
+   $$E(m)=g^{m} \times r^{n} mod(n^{2})$$
+
+:::
+
+### Propriété homomorphe
+
+::: incremental
+
+- Pour deux messages chiffrés $E(m_{1})$ et $E(m_{2})$ : $E(m_{1}) \times E(m_{2}) = E(m_{1} + m_{2})mod(n^{2})$
+
+- Permet de faire une addition dans le domaine chiffré sans accès aux données en clair.
+
+:::
+
+### Déchiffrement
+
+On définit $L(x) = \frac{x - 1}{n}$
+
+Calcul du message déchiffré :
+
+$m = \left(\frac{c^{\lambda} mod(n^{2}) - 1}{n} \times \frac{1}{L(g^{\lambda} mod (n^{2})) mod(n)}\right) mod(n)$
+
+## Exemple d'une fonction homomorphe complète : BGV
+
+Schéma homomorphe complet
+:   permet l’addition et la multiplication sur des données chiffrées.
+
+Basé sur la difficulté du problème LWE, résistant aux attaques quantiques.
+
+Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où $\Phi_m$ est un polynôme cyclotomique.
+
+### Génération des clés
+
+1. Choix des paramètres :
+   - $n$ : degré du polynôme (puissance de 2)
+   - $q$ : grand entier premier (modulo)
+   - f(x) : polynôme cyclotomique, généralement $f : x \mapsto x^n + 1$.
+
+***
+
+2. Clé privée $s(x)$ : polynôme aléatoire, coefficients dans $\{-1, 0, 1\}$, $deg \leq n$
+
+***
+
+3. Génération de la clé publique :
+   - $a(x) \in R_q \text{ aléatoire}$
+   - $e(x) \text{ petit bruit}$
+   - $b(x) = -a(x) \times (x) + e(x) mod(q)$
+
+   Clé publique : $(a(x), b(x))$
 
 
+### Chiffrement d’un message
+
+::: incremental
+
+1. Encodage du message $m(x)$ :
+   \[
+   m'(x) = m(x) \cdot \delta
+   \]
+
+2. Choix d’un bruit aléatoire $r(x)$
+
+3. Calcul du chiffré :
+   
+   $$
+   \begin{cases}
+   c_0(x) = b(x) \cdot r(x) + m'(x) \mod q \\
+   c_1(x) = a(x) \cdot r(x) \mod q
+   \end{cases}
+   $$
+
+   Le chiffré est la paire $(c_0(x), c_1(x))$
+
+:::
+
+### Propriétés homomorphes
+
+::: incremental
+
+- **Addition** :
+  \[
+  (c_0, c_1) + (c_0', c_1') = (c_0 + c_0', c_1 + c_1')
+  \]
+
+- **Multiplication** :
+  Multiplie deux chiffrés → donne un triplet $(c_0, c_1, c_2)$  
+  Il faut une étape de **relinearisation** pour revenir à un format à deux composantes.
+
+:::
+
+### Déchiffrement
+
+::: incremental
+
+1. Calcul intermédiaire :
+   \[
+   m'(x) = c_0(x) + c_1(x) \cdot s(x) \mod q
+   \]
+
+2. Décodage final :
+   \[
+   m(x) = \left\lfloor \frac{m'(x)}{\delta} \right\rfloor
+   \]
+
+:::
 
 # Reconnaissance d'image à partir de données chiffrées
 

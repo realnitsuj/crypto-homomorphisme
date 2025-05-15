@@ -29,9 +29,26 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4/dist/theme/white.css" id="theme">
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
 </head>
 <body>
   <div class="reveal">
@@ -50,23 +67,25 @@ class="title-slide slide level1">
 <h1>Le chiffrement homomorphique</h1>
 
 </section>
-<section id="définition-générale" class="slide level2">
+<section id="définition-générale" class="title-slide slide level2">
 <h2>Définition générale</h2>
 <p>Le chiffrement homomorphique est une forme de cryptographie qui
 permet d’effectuer des opérations sur des données chiffrées, sans jamais
 avoir besoin de les déchiffrer.</p>
 </section>
-<section class="slide level2">
+<section class="slide level3">
 
-<p>Soit <span class="math inline"><em>m</em><sub>1</sub></span> et <span
-class="math inline"><em>m</em><sub>2</sub></span> deux messages clairs,
-<span class="math inline">⋆</span> une opération simple et <span
-class="math inline"><em>E</em></span> un schéma de chiffrement.<br />
-<span class="math inline"><em>E</em></span> est dit homomorphe si on a
-:<span
-class="math display"><em>E</em>(<em>m</em><sub>1</sub> ⋆ <em>m</em><sub>2</sub>) = <em>E</em>(<em>m</em><sub>1</sub>) ∘ <em>E</em>(<em>m</em><sub>2</sub>)</span></p>
+<p>Soit <span class="math inline">m_{1}</span> et <span
+class="math inline">m_{2}</span> deux messages clairs, <span
+class="math inline">\star</span> et <span
+class="math inline">\circ</span> une opération simple et <span
+class="math inline">E</span> un schéma de chiffrement.<br />
+<span class="math inline">E</span> est dit homomorphe si on a :<span
+class="math display">E(m_{1} \star m_{2}) = E(m_{1}) \circ
+E(m_{2})</span></p>
 </section>
-<section id="comment-ça-marche" class="slide level2">
+
+<section id="comment-ça-marche" class="title-slide slide level2">
 <h2>Comment ça marche ?</h2>
 <ol type="1">
 <li class="fragment"><p>La fonction de génération de clés</p></li>
@@ -76,7 +95,8 @@ données chiffrées)</p></li>
 <li class="fragment"><p>La fonction de déchiffrement</p></li>
 </ol>
 </section>
-<section id="principes-à-respecter" class="slide level2">
+
+<section id="principes-à-respecter" class="title-slide slide level2">
 <h2>Principes à respecter</h2>
 <ol type="1">
 <li class="fragment"><p>Chiffrement sûr ou presque-sûr, besoins des
@@ -88,21 +108,21 @@ non-répudiation et disponibilité), principe de Kerckhoff</p></li>
 <li>La précision et l’encodage (cas du chiffrement de nombres
 réels)</li>
 </ul>
-<p><span class="math inline">⇒</span>
+<p><span class="math inline">\Rightarrow</span>
 <strong>Bootstrapping</strong></p></li>
 </ol>
 </section>
-<section class="slide level2">
+<section class="slide level3">
 
 <p>On distingue donc :</p>
 <dl>
 <dt>Homomorphisme</dt>
 <dd>
-structurelle (préserve les opérations)
+structurel (préserve les opérations)
 </dd>
 <dt>Correction</dt>
 <dd>
-fonctionnelle (le résultat est bon)
+fonctionnel (le résultat est bon)
 </dd>
 <dt>Sécurité</dt>
 <dd>
@@ -110,31 +130,175 @@ l’attaquant n’apprend rien
 </dd>
 </dl>
 </section>
-<section id="classes-de-fonctions-homomorphes" class="slide level2">
+
+<section id="classes-de-fonctions-homomorphes"
+class="title-slide slide level2">
 <h2>Classes de fonctions homomorphes</h2>
 <p>Deux types de fonctions homomorphes :</p>
 <ul>
-<li class="fragment"><p>Partielles (+ ou <span
-class="math inline">×</span>)</p>
+<li class="fragment"><p>Partielles (<span class="math inline">+</span>
+ou <span class="math inline">\times</span>)</p>
 <p>RSA (multiplication) ou Paillier (addition)</p></li>
-<li class="fragment"><p>Complètes (+ et <span
-class="math inline">×</span>)</p>
+<li class="fragment"><p>Complètes (<span class="math inline">+</span> et
+<span class="math inline">\times</span>)</p>
 <p>Brakerski-Gentry-Vaikuntanathan (BGV)</p></li>
 </ul>
 <div class="fragment">
 <pre><code>Cela est valide sur des entiers. Pour des flottants, les fonctions sont nécessairement homomorphiques complètes.</code></pre>
 </div>
 </section>
+
 <section
 id="exemple-dune-fonction-homomorphe-partielle-le-chiffrement-de-paillier"
-class="slide level2">
+class="title-slide slide level2">
 <h2>Exemple d’une fonction homomorphe partielle : le chiffrement de
 Paillier</h2>
+<dl>
+<dt>Schéma homomorphe partiel</dt>
+<dd>
+permet uniquement l’addition sur des données chiffrées.
+</dd>
+</dl>
+<p>Basé sur la difficulté du logarithme discret dans les groupes
+multiplicatifs.</p>
 </section>
-<section id="application-du-chiffrement-de-paillier"
-class="slide level2">
-<h2>Application du chiffrement de Paillier</h2>
-</section></section>
+<section id="génération-des-clés" class="slide level3">
+<h3>Génération des clés</h3>
+<ol type="1">
+<li class="fragment"><p>Choix de deux grands nombres premiers : <span
+class="math inline">p</span>, <span
+class="math inline">q</span></p></li>
+<li class="fragment"><p>Calcul : <span class="math inline">n = p \times
+q</span></p></li>
+<li class="fragment"><p>Clé publique : <span
+class="math inline">(n,g)</span> avec <span class="math inline">g \in
+Z_{n^{2}}</span> et <span class="math inline">g=n+1</span> en
+général</p></li>
+<li class="fragment"><p>Clé privée : <span class="math inline">\lambda =
+PPCM(p-1,q-1)</span></p></li>
+</ol>
+</section>
+<section id="chiffrement-dun-message" class="slide level3">
+<h3>Chiffrement d’un message</h3>
+<ol type="1">
+<li class="fragment"><p>Message <span class="math inline">m \in
+[0,n]</span></p></li>
+<li class="fragment"><p>Choix d’un nombre aléatoire <span
+class="math inline">r \in Z_{n}^{*}</span></p></li>
+<li class="fragment"><p>Formule de chiffrement : <span
+class="math display">E(m)=g^{m} \times r^{n} mod(n^{2})</span></p></li>
+</ol>
+</section>
+<section id="propriété-homomorphe" class="slide level3">
+<h3>Propriété homomorphe</h3>
+<ul>
+<li class="fragment"><p>Pour deux messages chiffrés <span
+class="math inline">E(m_{1})</span> et <span
+class="math inline">E(m_{2})</span> : <span class="math inline">E(m_{1})
+\times E(m_{2}) = E(m_{1} + m_{2})mod(n^{2})</span></p></li>
+<li class="fragment"><p>Permet de faire une addition dans le domaine
+chiffré sans accès aux données en clair.</p></li>
+</ul>
+</section>
+<section id="déchiffrement" class="slide level3">
+<h3>Déchiffrement</h3>
+<p>On définit <span class="math inline">L(x) = \frac{x -
+1}{n}</span></p>
+<p>Calcul du message déchiffré :</p>
+<p><span class="math inline">m = \left(\frac{c^{\lambda} mod(n^{2}) -
+1}{n} \times \frac{1}{L(g^{\lambda} mod (n^{2})) mod(n)}\right)
+mod(n)</span></p>
+</section>
+
+<section id="exemple-dune-fonction-homomorphe-complète-bgv"
+class="title-slide slide level2">
+<h2>Exemple d’une fonction homomorphe complète : BGV</h2>
+<dl>
+<dt>Schéma homomorphe complet</dt>
+<dd>
+permet l’addition et la multiplication sur des données chiffrées.
+</dd>
+</dl>
+<p>Basé sur la difficulté du problème LWE, résistant aux attaques
+quantiques.</p>
+<p>Utilise des polynômes dans des anneaux du type <span
+class="math inline">\mathbb{Z}[X]/(\Phi_m(X))</span> où <span
+class="math inline">\Phi_m</span> est un polynôme cyclotomique.</p>
+</section>
+<section id="génération-des-clés-1" class="slide level3">
+<h3>Génération des clés</h3>
+<ol type="1">
+<li>Choix des paramètres :
+<ul>
+<li><span class="math inline">n</span> : degré du polynôme (puissance de
+2)</li>
+<li><span class="math inline">q</span> : grand entier premier
+(modulo)</li>
+<li>f(x) : polynôme cyclotomique, généralement <span
+class="math inline">f : x \mapsto x^n + 1</span>.</li>
+</ul></li>
+</ol>
+</section>
+<section class="slide level3">
+
+<ol start="2" type="1">
+<li>Clé privée <span class="math inline">s(x)</span> : polynôme
+aléatoire, coefficients dans <span class="math inline">\{-1, 0,
+1\}</span>, <span class="math inline">deg \leq n</span></li>
+</ol>
+</section>
+<section class="slide level3">
+
+<ol start="3" type="1">
+<li>Génération de la clé publique :
+<ul>
+<li><span class="math inline">a(x) \in R_q \text{ aléatoire}</span></li>
+<li><span class="math inline">e(x) \text{ petit bruit}</span></li>
+<li><span class="math inline">b(x) = -a(x) \times (x) + e(x)
+mod(q)</span></li>
+</ul>
+Clé publique : <span class="math inline">(a(x), b(x))</span></li>
+</ol>
+</section>
+<section id="chiffrement-dun-message-1" class="slide level3">
+<h3>Chiffrement d’un message</h3>
+<ol type="1">
+<li class="fragment"><p>Encodage du message <span
+class="math inline">m(x)</span> : [ m’(x) = m(x) ]</p></li>
+<li class="fragment"><p>Choix d’un bruit aléatoire <span
+class="math inline">r(x)</span></p></li>
+<li class="fragment"><p>Calcul du chiffré :</p>
+<p><span class="math display">
+\begin{cases}
+c_0(x) = b(x) \cdot r(x) + m&#39;(x) \mod q \\
+c_1(x) = a(x) \cdot r(x) \mod q
+\end{cases}
+</span></p>
+<p>Le chiffré est la paire <span class="math inline">(c_0(x),
+c_1(x))</span></p></li>
+</ol>
+</section>
+<section id="propriétés-homomorphes" class="slide level3">
+<h3>Propriétés homomorphes</h3>
+<ul>
+<li class="fragment"><p><strong>Addition</strong> : [ (c_0, c_1) +
+(c_0’, c_1’) = (c_0 + c_0’, c_1 + c_1’) ]</p></li>
+<li class="fragment"><p><strong>Multiplication</strong> : Multiplie deux
+chiffrés → donne un triplet <span class="math inline">(c_0, c_1,
+c_2)</span><br />
+Il faut une étape de <strong>relinearisation</strong> pour revenir à un
+format à deux composantes.</p></li>
+</ul>
+</section>
+<section id="déchiffrement-1" class="slide level3">
+<h3>Déchiffrement</h3>
+<ol type="1">
+<li class="fragment"><p>Calcul intermédiaire : [ m’(x) = c_0(x) + c_1(x)
+s(x) q ]</p></li>
+<li class="fragment"><p>Décodage final : [ m(x) = ]</p></li>
+</ol>
+</section>
+</section>
 <section id="reconnaissance-dimage-à-partir-de-données-chiffrées"
 class="title-slide slide level1">
 <h1>Reconnaissance d’image à partir de données chiffrées</h1>
