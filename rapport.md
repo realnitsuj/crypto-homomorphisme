@@ -278,7 +278,7 @@ Quand on multiplie deux chiffrés :
     c^(1)=(c_0^(1),c_1^(1)),c^(2)=(c_0^(2),c_1^(2))
 
 On obtient :
-    c^(1)*c^(2)=(c_0^(1)*c_0^(2),  c_0^(1)*c_1^(2)+c_1^(1)*c_0^(2),  c_1^(1)*c_1^(2))
+    c^(1)*c^(2)=(c_0^(1)*c_0^(2),  c_0^(1)*c_1^(2)+c_1^(1)*c_0^(2),  c_1^(1)*c_1^(2))
 
 → C’est un triplet, donc on sort du format à 2 composantes.
 → Il faut "relineariser" pour revenir à un format à deux composantes.
@@ -289,7 +289,7 @@ On obtient :
 
 Si c(x)=(c0,c1), alors le message clair est obtenu par :
 m'(x)=c_0(x)+c_1(x)*s(x) mod(q)
-m(x) ={pipe_bas}m'(x)/$\delta$​⌉
+m(x) ={pipe_bas}m'(x)/$\delta$​[pipe]
 
 Sous réserve que le bruit ne soit pas trop grand, ce message est exact. (Remarque : le bruit augmente à chaque opération homomorphe, surtout les multiplications. Le schéma BGV inclut donc des techniques comme le modulus switching pour maintenir le bruit dans des bornes correctes tout au long du calcul. Nous n'aborderons pas cela ici.)
 
@@ -315,8 +315,8 @@ b=-a*s+e=-1234*1+1=-1233 mod(65537)=64304
 
 2. Chiffrement (on veut faire 4+5)
 Encodage avec $\delta$=1024 :
-m_1=4⇒m_1'=4*1024 = 4096 
-m_2=5⇒m_2'=5*1024 = 5120
+m_1=4$Rightarrow$m_1'=4*1024 = 4096 
+m_2=5$Rightarrow$m_2'=5*1024 = 5120
 
 Chiffrement
 Rappel : c_0=b*r+m',c_1=a*r
@@ -335,7 +335,7 @@ c_1^(2)=1234
 
 Déchiffrement :
 m'^+=c_0+c_1*s = 6750+2468 = 9218 mod(65537) 
-m={pipe_bas}9218/1024⌉={pipe_bas}9.002⌉=9
+m={pipe_bas}9218/1024[pipe]={pipe_bas}9.002[pipe]=9
 
 4. Multiplication
 
@@ -357,7 +357,7 @@ c_1'= c_1 = 6301
 
 m'^× = c_0'+c_1'*s = 2596+6301=8897 mod(65537) = 8897
 
-On utilise : m={pipe_bas}m'×$\delta$2⌉={pipe_bas}8897/1024^2⌉=0
+On utilise : m={pipe_bas}m'×$\delta$2[pipe]={pipe_bas}8897/1024^2[pipe]=0
 
 
 :( ça marche pas.... Pourquoi ?
@@ -406,6 +406,6 @@ Déchiffrement final :
 
 m'^× = c_0'+c_1'*s = 12651237+8329500 = 20980737 mod(68719476736) = 20980737
 
-On utilise : m={pipe_bas}m'×$\delta$2⌉={pipe_bas}20980737/1024^2⌉ = 20
+On utilise : m={pipe_bas}m'×$\delta$2[pipe]={pipe_bas}20980737/1024^2[pipe] = 20
 
 Ça fonctionne !
