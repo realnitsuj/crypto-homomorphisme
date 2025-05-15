@@ -29,6 +29,71 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4/dist/theme/white.css" id="theme">
   <script defer=""
@@ -61,6 +126,11 @@ Learning</h1>
   <p class="author">Tom Mafille</p>
 </section>
 
+<section id="section" class="title-slide slide level1">
+<h1></h1>
+<p><img data-src="intro.jpeg" height="500" /></p>
+</section>
+
 <section>
 <section id="le-chiffrement-homomorphique"
 class="title-slide slide level1">
@@ -69,16 +139,22 @@ class="title-slide slide level1">
 </section>
 <section id="définition-générale" class="title-slide slide level2">
 <h2>Définition générale</h2>
+<aside class="notes">
+<p>Justin</p>
+</aside>
 <p>Le chiffrement homomorphique est une forme de cryptographie qui
 permet d’effectuer des opérations sur des données chiffrées, sans jamais
 avoir besoin de les déchiffrer.</p>
 </section>
 <section class="slide level3">
 
+<aside class="notes">
+<p>Justin</p>
+</aside>
 <p>Soit <span class="math inline">m_{1}</span> et <span
 class="math inline">m_{2}</span> deux messages clairs, <span
 class="math inline">\star</span> et <span
-class="math inline">\circ</span> une opération simple et <span
+class="math inline">\circ</span> deux opérations simples et <span
 class="math inline">E</span> un schéma de chiffrement.<br />
 <span class="math inline">E</span> est dit homomorphe si on a :<span
 class="math display">E(m_{1} \star m_{2}) = E(m_{1}) \circ
@@ -87,9 +163,16 @@ E(m_{2})</span></p>
 
 <section id="comment-ça-marche" class="title-slide slide level2">
 <h2>Comment ça marche ?</h2>
+<aside class="notes">
+<p>Tom</p>
+</aside>
+<p><img data-src="../figure1.png" /></p>
+</section>
+<section class="slide level3">
+
 <ol type="1">
 <li class="fragment"><p>La fonction de génération de clés</p></li>
-<li class="fragment"><p>La fonction de déchiffrement</p></li>
+<li class="fragment"><p>La fonction de chiffrement</p></li>
 <li class="fragment"><p>La fonction d’évaluation (opérations sur les
 données chiffrées)</p></li>
 <li class="fragment"><p>La fonction de déchiffrement</p></li>
@@ -98,6 +181,9 @@ données chiffrées)</p></li>
 
 <section id="principes-à-respecter" class="title-slide slide level2">
 <h2>Principes à respecter</h2>
+<aside class="notes">
+<p>Tom</p>
+</aside>
 <ol type="1">
 <li class="fragment"><p>Chiffrement sûr ou presque-sûr, besoins des
 systèmes d’information (confidentialité, authentification, intégrité,
@@ -108,12 +194,15 @@ non-répudiation et disponibilité), principe de Kerckhoff</p></li>
 <li>La précision et l’encodage (cas du chiffrement de nombres
 réels)</li>
 </ul>
-<p><span class="math inline">\Rightarrow</span>
+<p><span class="math inline">\Rightarrow</span> e.g. :
 <strong>Bootstrapping</strong></p></li>
 </ol>
 </section>
 <section class="slide level3">
 
+<aside class="notes">
+<p>Tom</p>
+</aside>
 <p>On distingue donc :</p>
 <dl>
 <dt>Homomorphisme</dt>
@@ -134,6 +223,9 @@ l’attaquant n’apprend rien
 <section id="classes-de-fonctions-homomorphes"
 class="title-slide slide level2">
 <h2>Classes de fonctions homomorphes</h2>
+<aside class="notes">
+<p>Justin</p>
+</aside>
 <p>Deux types de fonctions homomorphes :</p>
 <ul>
 <li class="fragment"><p>Partielles (<span class="math inline">+</span>
@@ -153,6 +245,9 @@ id="exemple-dune-fonction-homomorphe-partielle-le-chiffrement-de-paillier"
 class="title-slide slide level2">
 <h2>Exemple d’une fonction homomorphe partielle : le chiffrement de
 Paillier</h2>
+<aside class="notes">
+<p>Justin</p>
+</aside>
 <dl>
 <dt>Schéma homomorphe partiel</dt>
 <dd>
@@ -186,7 +281,7 @@ PPCM(p-1,q-1)</span></p></li>
 <li class="fragment"><p>Choix d’un nombre aléatoire <span
 class="math inline">r \in Z_{n}^{*}</span></p></li>
 <li class="fragment"><p>Formule de chiffrement : <span
-class="math display">E(m)=g^{m} \times r^{n} mod(n^{2})</span></p></li>
+class="math display">E(m)=g^{m} \times r^{n} \mod(n^{2})</span></p></li>
 </ol>
 </section>
 <section id="propriété-homomorphe" class="slide level3">
@@ -194,8 +289,9 @@ class="math display">E(m)=g^{m} \times r^{n} mod(n^{2})</span></p></li>
 <ul>
 <li class="fragment"><p>Pour deux messages chiffrés <span
 class="math inline">E(m_{1})</span> et <span
-class="math inline">E(m_{2})</span> : <span class="math inline">E(m_{1})
-\times E(m_{2}) = E(m_{1} + m_{2})mod(n^{2})</span></p></li>
+class="math inline">E(m_{2})</span> :</p>
+<p><span class="math display">E(m_{1}) \times E(m_{2}) = E(m_{1} +
+m_{2})\mod(n^{2})</span></p></li>
 <li class="fragment"><p>Permet de faire une addition dans le domaine
 chiffré sans accès aux données en clair.</p></li>
 </ul>
@@ -204,29 +300,38 @@ chiffré sans accès aux données en clair.</p></li>
 <h3>Déchiffrement</h3>
 <p>On définit <span class="math inline">L(x) = \frac{x -
 1}{n}</span></p>
-<p>Calcul du message déchiffré :</p>
-<p><span class="math inline">m = \left(\frac{c^{\lambda} mod(n^{2}) -
-1}{n} \times \frac{1}{L(g^{\lambda} mod (n^{2})) mod(n)}\right)
-mod(n)</span></p>
+<p>Calcul du message déchiffré <span class="math inline">m</span> :
+<span class="math inline">\left(\frac{c^{\lambda} mod(n^{2}) - 1}{n}
+\times \frac{1}{L(g^{\lambda} mod (n^{2})) mod(n)}\right)
+\mod(n)</span></p>
 </section>
+</section>
+<section>
+<section id="implémentation-de-bgv" class="title-slide slide level1">
+<h1>Implémentation de BGV</h1>
 
-<section id="exemple-dune-fonction-homomorphe-complète-bgv"
-class="title-slide slide level2">
-<h2>Exemple d’une fonction homomorphe complète : BGV</h2>
+</section>
+<section id="propriétés" class="title-slide slide level2">
+<h2>Propriétés</h2>
 <dl>
 <dt>Schéma homomorphe complet</dt>
 <dd>
 permet l’addition et la multiplication sur des données chiffrées.
 </dd>
 </dl>
+<div class="fragment">
 <p>Basé sur la difficulté du problème LWE, résistant aux attaques
 quantiques.</p>
+</div>
+<div class="fragment">
 <p>Utilise des polynômes dans des anneaux du type <span
 class="math inline">\mathbb{Z}[X]/(\Phi_m(X))</span> où <span
 class="math inline">\Phi_m</span> est un polynôme cyclotomique.</p>
+</div>
 </section>
-<section id="génération-des-clés-1" class="slide level3">
-<h3>Génération des clés</h3>
+
+<section id="génération-des-clés-1" class="title-slide slide level2">
+<h2>Génération des clés</h2>
 <ol type="1">
 <li>Choix des paramètres :
 <ul>
@@ -234,8 +339,6 @@ class="math inline">\Phi_m</span> est un polynôme cyclotomique.</p>
 2)</li>
 <li><span class="math inline">q</span> : grand entier premier
 (modulo)</li>
-<li>f(x) : polynôme cyclotomique, généralement <span
-class="math inline">f : x \mapsto x^n + 1</span>.</li>
 </ul></li>
 </ol>
 </section>
@@ -253,60 +356,173 @@ aléatoire, coefficients dans <span class="math inline">\{-1, 0,
 <li>Génération de la clé publique :
 <ul>
 <li><span class="math inline">a(x) \in R_q \text{ aléatoire}</span></li>
-<li><span class="math inline">e(x) \text{ petit bruit}</span></li>
-<li><span class="math inline">b(x) = -a(x) \times (x) + e(x)
-mod(q)</span></li>
-</ul>
-Clé publique : <span class="math inline">(a(x), b(x))</span></li>
+<li><span class="math inline">b(x) = -a(x) \times s(x) + e(x)
+\mod(q)</span>, avec <span class="math inline">e(x) \text{ petit
+bruit}</span></li>
+</ul></li>
 </ol>
 </section>
-<section id="chiffrement-dun-message-1" class="slide level3">
-<h3>Chiffrement d’un message</h3>
+<section class="slide level3">
+
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> keygen(q, a, s, e):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>   b <span class="op">=</span> mod(<span class="op">-</span>a <span class="op">*</span> s <span class="op">+</span> e, q)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> (a, b), s</span></code></pre></div>
+</section>
+
+<section id="chiffrement-dun-message-1"
+class="title-slide slide level2">
+<h2>Chiffrement d’un message</h2>
 <ol type="1">
 <li class="fragment"><p>Encodage du message <span
-class="math inline">m(x)</span> : [ m’(x) = m(x) ]</p></li>
+class="math inline">m(x)</span> : <span class="math inline">m&#39;(x) =
+m(x) \cdot \Delta</span> avec <span class="math inline">\Delta = \lfloor
+\frac{q}{t} \rfloor</span></p></li>
 <li class="fragment"><p>Choix d’un bruit aléatoire <span
 class="math inline">r(x)</span></p></li>
 <li class="fragment"><p>Calcul du chiffré :</p>
-<p><span class="math display">
-\begin{cases}
-c_0(x) = b(x) \cdot r(x) + m&#39;(x) \mod q \\
-c_1(x) = a(x) \cdot r(x) \mod q
-\end{cases}
-</span></p>
+<ul>
+<li><span class="math inline">c_0(x) = b(x) \cdot r(x) + m&#39;(x) \mod
+q</span></li>
+<li><span class="math inline">c_1(x) = a(x) \cdot r(x) \mod
+q</span></li>
+</ul>
 <p>Le chiffré est la paire <span class="math inline">(c_0(x),
 c_1(x))</span></p></li>
 </ol>
 </section>
-<section id="propriétés-homomorphes" class="slide level3">
-<h3>Propriétés homomorphes</h3>
-<ul>
-<li class="fragment"><p><strong>Addition</strong> : [ (c_0, c_1) +
-(c_0’, c_1’) = (c_0 + c_0’, c_1 + c_1’) ]</p></li>
-<li class="fragment"><p><strong>Multiplication</strong> : Multiplie deux
-chiffrés → donne un triplet <span class="math inline">(c_0, c_1,
-c_2)</span><br />
-Il faut une étape de <strong>relinearisation</strong> pour revenir à un
-format à deux composantes.</p></li>
-</ul>
+<section class="slide level3">
+
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encrypt(m, pk, delta, r, q):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   a, b <span class="op">=</span> pk</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   m_enc <span class="op">=</span> encode(m, delta)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   c0 <span class="op">=</span> mod(b <span class="op">*</span> r <span class="op">+</span> m_enc, q)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>   c1 <span class="op">=</span> mod(a <span class="op">*</span> r, q)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> (c0, c1)</span></code></pre></div>
 </section>
-<section id="déchiffrement-1" class="slide level3">
-<h3>Déchiffrement</h3>
+
+<section id="encodage-et-décodage-des-messages"
+class="title-slide slide level2">
+<h2>Encodage et décodage des messages</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode(m, delta):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> m <span class="op">*</span> delta</span></code></pre></div>
+</div><div class="column" style="width:60%;">
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decode(m_prime, delta, t):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (m_prime <span class="op">//</span> delta) <span class="op">%</span> q</span></code></pre></div>
+</div>
+</div>
+</section>
+
+<section id="propriétés-homomorphes" class="title-slide slide level2">
+<h2>Propriétés homomorphes</h2>
+
+</section>
+<section id="addition" class="slide level3">
+<h3>Addition</h3>
+<p><span class="math display">(c_{0},c_{1}) + (c_{0}&#39;,c_{1}&#39;) =
+(c_{0} + c_{0}&#39;, c_{1} + c_{1}&#39;)</span></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> add(c1, c2, q):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>   c0 <span class="op">=</span> mod(c1[<span class="dv">0</span>] <span class="op">+</span> c2[<span class="dv">0</span>], q)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   c1_ <span class="op">=</span> mod(c1[<span class="dv">1</span>] <span class="op">+</span> c2[<span class="dv">1</span>], q)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> (c0, c1_)</span></code></pre></div>
+</section>
+<section id="multiplication-simplifiée" class="slide level3">
+<h3>Multiplication simplifiée</h3>
+<p>Multiplie deux chiffrés → donne un triplet <span
+class="math inline">(c_0, c_1, c_2)</span><br />
+Il faut une étape de <strong>relinéarisation</strong> pour revenir à un
+format à deux composantes.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mul(c1, c2, s, q):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>   c0 <span class="op">=</span> mod(c1[<span class="dv">0</span>] <span class="op">*</span> c2[<span class="dv">0</span>], q)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>   c1_ <span class="op">=</span> mod(c1[<span class="dv">0</span>] <span class="op">*</span> c2[<span class="dv">1</span>] <span class="op">+</span> c1[<span class="dv">1</span>] <span class="op">*</span> c2[<span class="dv">0</span>], q)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>   c2_ <span class="op">=</span> mod(c1[<span class="dv">1</span>] <span class="op">*</span> c2[<span class="dv">1</span>], q)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>   c0p <span class="op">=</span> mod(c0 <span class="op">+</span> c2_ <span class="op">*</span> s, q)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>   c1p <span class="op">=</span> c1_</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">return</span> (c0p, c1p)</span></code></pre></div>
+</section>
+
+<section id="déchiffrement-1" class="title-slide slide level2">
+<h2>Déchiffrement</h2>
 <ol type="1">
-<li class="fragment"><p>Calcul intermédiaire : [ m’(x) = c_0(x) + c_1(x)
-s(x) q ]</p></li>
-<li class="fragment"><p>Décodage final : [ m(x) = ]</p></li>
+<li class="fragment"><p>Calcul intermédiaire :</p>
+<p><span class="math display">m&#39;(x)=c_{0}(x)+c_{1}(x) \times s(x)
+\mod(q)</span></p></li>
+<li class="fragment"><p>Décodage final :</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><p>Addition</p>
+<p><span class="math display">m(x) = \lfloor \frac{m&#39;(x)}{\Delta}
+\rfloor</span></p></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><p>Multiplication</p>
+<p><span class="math display">m(x) = \lfloor
+\frac{m&#39;(x)}{\Delta^{2}} \rfloor</span></p></li>
+</ul>
+</div>
+</div></li>
 </ol>
 </section>
+<section class="slide level3">
+
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decrypt(ciphertext, s, q, delta, t):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    c0, c1 <span class="op">=</span> ciphertext</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    m_prime <span class="op">=</span> mod(c0 <span class="op">+</span> c1 <span class="op">*</span> s, q)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> decode(m_prime, delta, t)</span></code></pre></div>
 </section>
+</section>
+<section>
 <section id="reconnaissance-dimage-à-partir-de-données-chiffrées"
 class="title-slide slide level1">
 <h1>Reconnaissance d’image à partir de données chiffrées</h1>
-
+<aside class="notes">
+<p>Parler de la reconnaissance d’images</p>
+</aside>
+</section>
+<section id="fonctionnement-global" class="title-slide slide level2">
+<h2>Fonctionnement global</h2>
+<p><strong>BFV :</strong> Proche de BGV</p>
+<ol type="1">
+<li class="fragment">Chiffrement vecteurs d’embedding en local</li>
+<li class="fragment">Envoi au serveur</li>
+<li class="fragment">Recherche homomorphique possible</li>
+</ol>
 </section>
 
-<section id="implémentation" class="title-slide slide level1">
-<h1>Implémentation</h1>
+<section id="principe" class="title-slide slide level2">
+<h2>Principe</h2>
+<p><img data-src="../figure2.png" /></p>
+</section>
+
+<section id="essai-en-direct" class="title-slide slide level2">
+<h2>Essai en direct</h2>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:25%;">
+<p><img data-src="image_claire.jpeg" /></p>
+</div><div class="column" style="width:25%;">
+<p>1ac1a3af043d6ee86fd9fb03b934c19c490b9a0b7bd3eea952125cbcd5129296c21c9589c10f0a4f2b143fe5e60c9a8910cb96713e54ed58ef777ee7c41d376c34b4903599a555883362c5b0ba66f4dc2fc37f9e0b650def39c211cbea3f5f20241997101aba3dab16f25f73eeb428dcf3205f360427521b068f20ce89a4475715fe1c0d3794ee9522c5a77e6a34c8e14c9279b23838120b873078e42de61e292bc91d4edaf04e462eb1a7dee8dd5a2c9ed15b6d1ba8760c87f0a29afe94b8db9fe4d1fba3659a17c73a143f74315edae72885296d7c58aeef438225dc3b777c7fac3ad9456f3c04b839a4ec752c86096e8b35417285df1ef8065686f0663478a921be1e1f759de85f4e747b3530e17d262600e2871de8cc4ba5ec3d839073026cc925055b4f71a0af32fa729f7f64abce73abfa276ac99094149279dcfabcdfba2b9087c97adefbfecc897842912f2dae712fdb2f84b24c357fab664017943258ec45db03768670705a10e1b0137b3327d8a13616347793aa3c6d9d77c598c48567dbf3552f695e3c86bb67e86ea7e68d4be7115ec7b57416c8f696cfa2dea689dc3449a276417e23454b9d51352fe5ac0fe17827676f3e1ba95d4e2a8288928e5c580616b15b41536cbf78a35703a91672e740ddb38494026891179a09c786690d1b5ee78836cdd0f72c5ead834819fbabe1c0</p>
+</div><div class="column" style="width:25%;">
+<p><img data-src="image_crypte.jpeg" /></p>
+</div><div class="column" style="width:25%;">
+<p><img data-src="image_contours.jpeg" /></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="merci-de-votre-attention" class="title-slide slide level1">
+<h1>Merci de votre attention !</h1>
 
 </section>
     </div>
