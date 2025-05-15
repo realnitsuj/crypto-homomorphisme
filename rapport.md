@@ -419,3 +419,247 @@ On obtient bien le résultat attendu : l'addition est valide dans le domaine chi
 Considérons maintenant le chiffrement BGV qui nous permettra d'effectuer des multiplications dans le domaine chiffré.
 
 \vspace{20.0px}
+
+## Le chiffrement BGV
+
+\vspace{10.0px}
+
+Passons maintenant à un exemple de fonction homomorphique complète : le chiffrement BGV.
+    
+Étant un chiffrement complet, BGV permet non seulement des additions, mais aussi des multiplications sur les données chiffrées, comme nous l'avons vu tout à l'heure.  
+Il repose sur la difficulté d’un problème mathématique moderne appelé [Learning With Errors (LWE)](https://en.wikipedia.org/wiki/Learning_with_errors) ou sa version à structure algébrique [Ring-LWE](https://en.wikipedia.org/wiki/Ring_learning_with_errors). Sans rentrer davantage dans les détails, il fonctionne sur des [polynômes cyclotomiques](https://fr.wikipedia.org/wiki/Polyn%C3%B4me_cyclotomique) dans des anneaux de la forme : 
+
+$${\displaystyle \mathbb {Z} [X]/(\Phi _{m}(X))}$$
+
+LWE constitue un problème calculatoire supposé difficile et resistant aux attaques quantiques.
+
+Nous allons aborder dans la sous-section qui suit les grandes étapes de son fonctionnement.
+
+\vspace{20.0px}
+
+### Génération des clés
+
+\vspace{10.0px}
+
+On fixe des paramètres :
+
+- **n :** degré du polynôme (doit être une puissance de 2 pour l'efficacité).
+- **q :** un grand entier premier (modulo). Il faut qu'il soit grand^[Pour une sécurité classique de 128 bits, les implémentations modernes recommandent pour BGV $q \approx 2^{50}$ à  $2^{200}$, selon la profondeur des circuits], sinon on a des débordements et le résultat final est biaisé.
+- **f(x) :** un [polynôme cyclotomique](https://fr.wikipedia.org/wiki/Polyn%C3%B4me_cyclotomique), généralement de la forme $f : x \mapsto x^n + 1$.
+
+\vspace{10.0px}
+
+Et on choisit :
+
+-  Une clé secrète s(x) $\in \mathbb {Z} _{q}$​, petit polynôme aléatoire^[de degré $\leq n$ et de coefficients petits, généralement dans {-1;0;1}. On veut en effet garder le produit $s \times r$ peu bruyant].
+
+- Une clé publique $pk=(a(x),b(x))$ constituée de $a(x)\in R_{q}$ (aléatoire) et :
+
+  $$b(x) = -a(x) \times (x) + e(x) mod(q)$$
+
+  où $e(x)$ est un petit bruit (petit $\Leftrightarrow |e(x) \times r(x)| \leq \delta$).
+
+La clé publique est donc : $pk=(a(x),b(x))$, et la clé secrète est $s(x)$.
+
+### Encodage et chiffrement
+
+Pour chiffrer un message $m(x) \in R_{q}$ (avec petits coefficients) :
+
+- On commence par encoder $m$ avec un facteur d’échelle $\delta = \lfloor \frac{q}{t} \rfloor$ tel qu'on ait $m'(x)=m(x) \times \delta$. L’objectif est que $m' \gg e \times r$, pour assurer que le bruit ne perturbe pas le message lors du déchiffrement.
+
+- On prend un petit vecteur aléatoire $r(x) \in R_{q}$
+
+- On calcule :
+
+  $$c_{0}(x) = b(x) \times r(x) + m'(x) mod(q)$$
+
+  et :
+
+  $$c_{1}(x) = a(x) \times r(x) mod(q)$$
+
+  Le chiffré est donc :
+
+  $$c(x)=(c_{0}(x),c_{1}(x))$$
+
+### Calculs sur les messages chiffrés
+
+#### Additions
+
+$$(c_{0},c_{1}) + (c_{0}',c_{1}') = (c_{0} + c_{0}', c_{1} + c_{1}')$$
+
+#### Multiplications
+
+Le produit nécessite une étape supplémentaire - appelée *relinearization* - car le degré du chiffré augmente. La relinéarisation utilise des clés de relinéarisation, générées à partir de la clé secrète, pour ramener le chiffré à deux composantes tout en préservant l’homomorphisme. Le schéma BGV applique un traitement pour revenir à une forme standard à 2 composantes.
+
+Concrètement, quand on multiplie deux chiffrés $c^{(1)}=(c_{0}^{(1)},c_{1}^{(1)})$ et $c^{(2)}=(c_{0}^{(2)},c_{1}^{(2)})$, on obtient :
+
+$$c^{(1)} \times c^{(2)} = (c_{0}^{(1)} \times c_{0}^{(2)},  c_{0}^{(1)} \times c_{1}^{(2)} + c_{1}^{(1)} \times c_{0} ^ {(2)}, c_{1}^{(1)} \times c_{1}^{(2)})$$
+
+- C’est un triplet, donc on sort du format à 2 composantes.
+- Il faut "relinéariser" pour revenir à un format à deux composantes.
+
+### Déchiffrement
+
+- Le détenteur de la clé privée peut supprimer le bruit et extraire le message clair à partir du polynôme :
+
+Si $c(x)=(c0,c1)$, alors le message clair est obtenu par :
+
+$$m'(x)=c_{0}(x)+c_{1}(x) \times s(x) mod(q)$$
+
+$$m(x) = \lfloor \frac{m'(x)}{\delta} \rfloor$$
+
+Sous réserve que le bruit ne soit pas trop grand, ce message est exact.
+
+> Remarque : le bruit augmente à chaque opération homomorphe, surtout les multiplications. Le schéma BGV inclut donc des techniques comme le modulus switching pour maintenir le bruit dans des bornes correctes tout au long du calcul. Nous n'aborderons pas cela ici.
+
+
+### Application du chiffrement BGV
+
+| Paramètre | Valeur         | Justification                                  |
+| --------- | -------------- | ---------------------------------------------- |
+| $t$       | 64             | Message clair : on veut 4, 5, 9, 20 $\in$  \[0, 63] |
+| $q$       | 65537          | Grand modulo premier, $q > \Delta^2$           |
+| $\Delta$  | $\lfloor \frac{q}{t} \rfloor = 1024$ | Facteur d’échelle, assure que $m' \gg bruit$   |
+| $s$       | 1              | Clé secrète simplifiée                         |
+| $a$       | 1234           | Échantillon aléatoire de $\mathbb{Z}_q$        |
+| $e$       | 1              | Bruit minimal pour garantir exactitude         |
+| $r$       | 1              | Aléa petit et constant pour simplicité         |
+
+#### Génération de clés
+
+On calcule :
+
+$$b=-a*s+e=-1234*1+1=-1233 mod(65537)=64304$$
+
+- Clé publique : $pk=(a(x)=12345,b(x)=20424)$
+- Clé secrète : $s(x)=1$
+
+
+#### Chiffrement (on veut faire 4+5)
+
+Encodage avec $\delta=1024$ :
+
+$$m_{1} = 4 \Rightarrow m_{1}'=4 \times 1024 = 4096$$
+
+$$m_{2} = 5 \Rightarrow m_{2}'=5 \times 1024 = 5120$$
+
+
+> Rappel : $c_{0} = b \times r + m'$, $c_{1} =a \times r$
+
+Pour $m_{1}$ :
+
+$$c_{0}^{(1)} = 64304+4096 = 68400 mod(65537) = 2863$$
+
+$$c_{1}^{(1)} = 1234$$
+
+Pour $m_{2}$ :
+
+$$c_{0}^{(2)} = 64304+5120 = 69424 mod(65537) = 3887$$
+
+$$c_{1}^{(2)}=1234$$
+
+
+#### Addition
+
+$$(c_{0}^{(1)}+c_{0}^{(2)}, c_{1}^{(1)}+c_{1}^{(2)})=(2863+3887, 1234+1234)=(6750, 2468)$$
+
+Déchiffrement :
+
+$$m'^{+}=c_{0}+c_{1} \times s = 6750+2468 = 9218 mod(65537)$$
+
+$$m=\lfloor 9218/1024 \rfloor= \lfloor 9.002 \rfloor=9$$
+
+#### Multiplication
+
+Produit brut (avant relinéarisation) :
+
+- Formule du produit:
+    
+  $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 mod(65537) = 52728$$
+
+  $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)} +c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 mod(65537) = 6301$$
+
+  $$c_{2}^{\times} = c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 mod(65537) = 15405$$
+
+- Triplet :
+
+  $$(c_{0},c_{1},c_{2})=(52728, 6301, 15405)$$
+
+Relinéarisation (simplifiée ici) :
+
+On simule que $c_{2} \times s$ est injecté dans $c_{0}$, on a :
+
+$$c_{0}'=c_{0}+c_{2} \times s = 52728+15405 = 68133 mod(65537) = 2596$$
+
+$$c_{1}'= c_{1} = 6301$$
+
+#### Déchiffrement final
+
+$$m'^{\times} = c_{0}'+c_{1}'*s = 2596+6301=8897 mod(65537) = 8897$$
+
+On utilise : $m=\lfloor m' \times \delta ^{2} \rfloor = \lfloor 8897/1024^{2}\rfloor=0$
+
+
+Ça marche pas.... Pourquoi ? :(
+
+Toute l'information a été perdue dans la réduction modulo q car le produit chiffré a dépassé q. Il faut $m_{1} \times m_{2} \times \delta ^{2} \ll q$. 
+
+Trouver un q minimal, c'est le **noise budget** (ici on n'aborde pas ça).
+
+$m_{1}' \times m_{2}'=4096 \times 5120=20971520$ plus grand que 65537
+
+En refaisant avec $q = 2^{36} = 68719476736$ :
+
+$$b = -a \times s+e = -1234 \times 1+1 = -1233 mod(68719476736) = 68719475503$$
+
+- Clé publique : $pk=(a(x)=12345,b(x)=68719475503)$
+- Clé secrète : $s(x)=1$
+
+> Rappel : $c_{0}=b \times r+m'$, $c_{1}=a \times r$
+
+Pour $m_{1}$ :
+
+$$c_{0}^{(1)} = 68719475503+4096 = 68719479599 mod(68719476736) = 2863$$
+
+$$c_{1}^{(1)} = 1234$$
+
+Pour $m_{2}$ :
+
+$$c_{0}^{(2)} = 68719475503+5120 = 68719480623 mod(68719476736) = 3887$$
+
+$$c_{1}^{(2)}=1234$$
+
+
+Et la multiplication :
+
+Produit brut (avant relinéarisation) :
+
+- Formule du produit:
+
+  $$c_{0}^{\times} = c_{0}^{(1)} \times c_{0}^{(2)} = 2863 \times 3887 = 11128481 mod(68719476736) = 11128481$$
+
+  $$c_{1}^{\times} = c_{0}^{(1)} \times c_{1}^{(2)}+c_{1}^{(1)} \times c_{0}^{(2)} = 2863 \times 1234 + 1234 \times 3887 = 3532942 + 4796558 = 8329500 mod(68719476736) = 8329500$$
+
+  $$c_{2}^{\times}= c_{1}^{(1)} \times c_{1}^{(2)} = 1234 \times 1234 = 1522756 mod(68719476736) = 1522756$$
+
+- Triplet :
+
+  $$(c_{0},c_{1},c_{2})=(11128481, 8329500, 1522756)$$
+
+Relinéarisation (simplifiée ici) :
+
+On simule que $c_2 \times s$ est injecté dans $c_{0}$, on a :
+
+$$c_{0}'=c_{0}+c_{2} \times s = 11128481+1522756 = 12651237 mod(68719476736) = 12651237$$
+
+$$c_{1}'= c_{1} = 8329500$$
+
+Finalement :
+
+$$m'^{\times} = c_{0}'+c_{1}' \times s = 12651237+8329500 = 20980737 mod(68719476736) = 20980737$$
+
+On utilise : $m=\lfloor m'× \delta ^{2} \rfloor= \lfloor 20980737/1024^{2} \rfloor = 20$
+
+Ça fonctionne !
+
+sources : <https://www.youtube.com/@CipheredDuck>
