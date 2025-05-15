@@ -109,8 +109,6 @@ Basé sur la difficulté du logarithme discret dans les groupes multiplicatifs.
 
 :::
 
-
-
 ### Chiffrement d’un message
 
 ::: incremental
@@ -142,12 +140,18 @@ Calcul du message déchiffré :
 
 $m = \left(\frac{c^{\lambda} mod(n^{2}) - 1}{n} \times \frac{1}{L(g^{\lambda} mod (n^{2})) mod(n)}\right) mod(n)$
 
+
+
 ## Exemple d'une fonction homomorphe complète : BGV
 
 Schéma homomorphe complet
 :   permet l’addition et la multiplication sur des données chiffrées.
 
+. . .
+
 Basé sur la difficulté du problème LWE, résistant aux attaques quantiques.
+
+. . .
 
 Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où $\Phi_m$ est un polynôme cyclotomique.
 
@@ -156,7 +160,9 @@ Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où 
 1. Choix des paramètres :
    - $n$ : degré du polynôme (puissance de 2)
    - $q$ : grand entier premier (modulo)
-   - f(x) : polynôme cyclotomique, généralement $f : x \mapsto x^n + 1$.
+   - f(x) : polynôme cyclotomique, généralement
+     
+     $f : x \mapsto x^n + 1$
 
 ***
 
@@ -176,21 +182,20 @@ Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où 
 
 ::: incremental
 
-1. Encodage du message $m(x)$ :
-   \[
-   m'(x) = m(x) \cdot \delta
-   \]
+1. Encodage du message $m(x)$ : $m'(x) = m(x) \cdot \delta$
+
+   avec $\delta = \lfloor \frac{q}{t} \rfloor$
 
 2. Choix d’un bruit aléatoire $r(x)$
 
 3. Calcul du chiffré :
    
-   $$
-   \begin{cases}
-   c_0(x) = b(x) \cdot r(x) + m'(x) \mod q \\
-   c_1(x) = a(x) \cdot r(x) \mod q
-   \end{cases}
-   $$
+   ::: nonincremental
+
+   - $c_0(x) = b(x) \cdot r(x) + m'(x) \mod q$
+   - $c_1(x) = a(x) \cdot r(x) \mod q$
+
+   :::
 
    Le chiffré est la paire $(c_0(x), c_1(x))$
 
@@ -201,13 +206,12 @@ Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où 
 ::: incremental
 
 - **Addition** :
-  \[
-  (c_0, c_1) + (c_0', c_1') = (c_0 + c_0', c_1 + c_1')
-  \]
+  
+  $$(c_{0},c_{1}) + (c_{0}',c_{1}') = (c_{0} + c_{0}', c_{1} + c_{1}')$$
 
 - **Multiplication** :
   Multiplie deux chiffrés → donne un triplet $(c_0, c_1, c_2)$  
-  Il faut une étape de **relinearisation** pour revenir à un format à deux composantes.
+  Il faut une étape de **relinéarisation** pour revenir à un format à deux composantes.
 
 :::
 
@@ -216,17 +220,31 @@ Utilise des polynômes dans des anneaux du type $\mathbb{Z}[X]/(\Phi_m(X))$ où 
 ::: incremental
 
 1. Calcul intermédiaire :
-   \[
-   m'(x) = c_0(x) + c_1(x) \cdot s(x) \mod q
-   \]
+
+   $$m'(x)=c_{0}(x)+c_{1}(x) \times s(x) ~ mod(q)$$
+
 
 2. Décodage final :
-   \[
-   m(x) = \left\lfloor \frac{m'(x)}{\delta} \right\rfloor
-   \]
+
+   $$m(x) = \lfloor \frac{m'(x)}{\delta} \rfloor$$
 
 :::
 
 # Reconnaissance d'image à partir de données chiffrées
+
+## Définitions
+
+Vecteur d'embedding
+:   Encode les caractéristiques visuelles essentielles d’une image (formes, couleurs, textures) dans un espace vectoriel de dimension réduite (souvent entre 128 et 512 dimensions).
+
+***
+
+Quantification
+:   Convertion des valeurs réelles en entiers pour permettre leur chiffrement. Cela permet d’utiliser un chiffrement comme BFV qui ne supporte que les entiers.
+
+***
+
+Batching
+:   Encodage par paquets
 
 # Implémentation

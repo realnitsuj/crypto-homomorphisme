@@ -219,23 +219,27 @@ class="title-slide slide level2">
 permet l’addition et la multiplication sur des données chiffrées.
 </dd>
 </dl>
+<div class="fragment">
 <p>Basé sur la difficulté du problème LWE, résistant aux attaques
 quantiques.</p>
+</div>
+<div class="fragment">
 <p>Utilise des polynômes dans des anneaux du type <span
 class="math inline">\mathbb{Z}[X]/(\Phi_m(X))</span> où <span
 class="math inline">\Phi_m</span> est un polynôme cyclotomique.</p>
+</div>
 </section>
 <section id="génération-des-clés-1" class="slide level3">
 <h3>Génération des clés</h3>
 <ol type="1">
 <li>Choix des paramètres :
 <ul>
-<li><span class="math inline">n</span> : degré du polynôme (puissance de
-2)</li>
-<li><span class="math inline">q</span> : grand entier premier
-(modulo)</li>
-<li>f(x) : polynôme cyclotomique, généralement <span
-class="math inline">f : x \mapsto x^n + 1</span>.</li>
+<li><p><span class="math inline">n</span> : degré du polynôme (puissance
+de 2)</p></li>
+<li><p><span class="math inline">q</span> : grand entier premier
+(modulo)</p></li>
+<li><p>f(x) : polynôme cyclotomique, généralement</p>
+<p><span class="math inline">f : x \mapsto x^n + 1</span></p></li>
 </ul></li>
 </ol>
 </section>
@@ -264,16 +268,19 @@ Clé publique : <span class="math inline">(a(x), b(x))</span></li>
 <h3>Chiffrement d’un message</h3>
 <ol type="1">
 <li class="fragment"><p>Encodage du message <span
-class="math inline">m(x)</span> : [ m’(x) = m(x) ]</p></li>
+class="math inline">m(x)</span> : <span class="math inline">m&#39;(x) =
+m(x) \cdot \delta</span></p>
+<p>avec <span class="math inline">\delta = \lfloor \frac{q}{t}
+\rfloor</span></p></li>
 <li class="fragment"><p>Choix d’un bruit aléatoire <span
 class="math inline">r(x)</span></p></li>
 <li class="fragment"><p>Calcul du chiffré :</p>
-<p><span class="math display">
-\begin{cases}
-c_0(x) = b(x) \cdot r(x) + m&#39;(x) \mod q \\
-c_1(x) = a(x) \cdot r(x) \mod q
-\end{cases}
-</span></p>
+<ul>
+<li><span class="math inline">c_0(x) = b(x) \cdot r(x) + m&#39;(x) \mod
+q</span></li>
+<li><span class="math inline">c_1(x) = a(x) \cdot r(x) \mod
+q</span></li>
+</ul>
 <p>Le chiffré est la paire <span class="math inline">(c_0(x),
 c_1(x))</span></p></li>
 </ol>
@@ -281,30 +288,66 @@ c_1(x))</span></p></li>
 <section id="propriétés-homomorphes" class="slide level3">
 <h3>Propriétés homomorphes</h3>
 <ul>
-<li class="fragment"><p><strong>Addition</strong> : [ (c_0, c_1) +
-(c_0’, c_1’) = (c_0 + c_0’, c_1 + c_1’) ]</p></li>
+<li class="fragment"><p><strong>Addition</strong> :</p>
+<p><span class="math display">(c_{0},c_{1}) + (c_{0}&#39;,c_{1}&#39;) =
+(c_{0} + c_{0}&#39;, c_{1} + c_{1}&#39;)</span></p></li>
 <li class="fragment"><p><strong>Multiplication</strong> : Multiplie deux
 chiffrés → donne un triplet <span class="math inline">(c_0, c_1,
 c_2)</span><br />
-Il faut une étape de <strong>relinearisation</strong> pour revenir à un
+Il faut une étape de <strong>relinéarisation</strong> pour revenir à un
 format à deux composantes.</p></li>
 </ul>
 </section>
 <section id="déchiffrement-1" class="slide level3">
 <h3>Déchiffrement</h3>
 <ol type="1">
-<li class="fragment"><p>Calcul intermédiaire : [ m’(x) = c_0(x) + c_1(x)
-s(x) q ]</p></li>
-<li class="fragment"><p>Décodage final : [ m(x) = ]</p></li>
+<li class="fragment"><p>Calcul intermédiaire :</p>
+<p><span class="math display">m&#39;(x)=c_{0}(x)+c_{1}(x) \times s(x) ~
+mod(q)</span></p></li>
+<li class="fragment"><p>Décodage final :</p>
+<p><span class="math display">m(x) = \lfloor \frac{m&#39;(x)}{\delta}
+\rfloor</span></p></li>
 </ol>
 </section>
 </section>
+<section>
 <section id="reconnaissance-dimage-à-partir-de-données-chiffrées"
 class="title-slide slide level1">
 <h1>Reconnaissance d’image à partir de données chiffrées</h1>
 
 </section>
+<section id="définitions" class="title-slide slide level2">
+<h2>Définitions</h2>
+<dl>
+<dt>Vecteur d’embedding</dt>
+<dd>
+Encode les caractéristiques visuelles essentielles d’une image (formes,
+couleurs, textures) dans un espace vectoriel de dimension réduite
+(souvent entre 128 et 512 dimensions).
+</dd>
+</dl>
+</section>
+<section class="slide level3">
 
+<dl>
+<dt>Quantification</dt>
+<dd>
+Convertion des valeurs réelles en entiers pour permettre leur
+chiffrement. Cela permet d’utiliser un chiffrement comme BFV qui ne
+supporte que les entiers.
+</dd>
+</dl>
+</section>
+<section class="slide level3">
+
+<dl>
+<dt>Batching</dt>
+<dd>
+Encodage par paquets
+</dd>
+</dl>
+</section>
+</section>
 <section id="implémentation" class="title-slide slide level1">
 <h1>Implémentation</h1>
 
